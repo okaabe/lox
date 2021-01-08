@@ -51,6 +51,7 @@ class Lexer(
             '=' -> if (match('=')) addToken(TokenType.EQUAL_EQUAL) else addToken(TokenType.EQUAL)
             '>' -> if (match('=')) addToken(TokenType.GREATER_EQUAL) else addToken(TokenType.GREATER)
             '<' -> if (match('=')) addToken(TokenType.LESS_EQUAL) else addToken(TokenType.LESS)
+            '!' -> if (match('=')) addToken(TokenType.BANG_EQUAL) else addToken(TokenType.BANG)
 
             ' ', '\r' -> return
             '\n' -> line++
@@ -76,7 +77,7 @@ class Lexer(
             advance()
         }
 
-        addToken(TokenType.NUMBER, code.substring(start, current))
+        addToken(TokenType.NUMBER, code.substring(start, current).toDouble())
     }
 
     private fun consumeString() {
