@@ -143,19 +143,3 @@ class Parser(
     private fun previous(): Token = tokens[actual - 1]
     private fun peek(): Token = tokens[actual]
 }
-
-fun main() {
-    kotlin.runCatching {
-        val tokens = Lexer("var test = 2").scan()
-        val parser = Parser(tokens)
-
-        tokens.map { println(it) }
-        parser.parse().map { println(it) }
-    }.exceptionOrNull()?.also { throwable ->
-        if (throwable is VoidException) {
-            throwable.report()
-        } else {
-            println(throwable.message)
-        }
-    }
-}
