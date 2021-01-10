@@ -2,10 +2,37 @@ package me.otofune.void.interpreter
 
 import me.otofune.void.front.*
 
-class Interpreter : Expr.Visitor<Any?> {
-    fun evaluate(expr: Expr): Any? = expr.accept(this)
+class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Any?> {
+    private val callframe = Callframe()
 
-    override fun acceptBinary(expr: Expr.Binary): Any? {
+    private fun evaluate(expr: Expr): Any? = expr.visit(this)
+
+    fun interpret(stmts: List<Stmt>) {
+        stmts.forEach { stmt ->
+            stmt.visit(this)
+        }
+    }
+
+    override fun visitVarAssign(stmt: Stmt.VarAssign) {
+    }
+
+    override fun visitVariableExpr(expr: Expr.Variable): Any? {
+        return callframe.getAndCheckExistence(expr.variable.lexeme)
+    }
+
+    override fun visitVarDeclStmt(stmt: Stmt.VarDeclStmt) {
+        callframe.declareVar(stmt.name.lexeme, evaluate(stmt.value))
+    }
+
+    override fun visitPrintStmt(stmt: Stmt.PrintStmt) {
+        println(evaluate(stmt.expr))
+    }
+
+    override fun visitExprStmt(stmt: Stmt.ExprStmt): Any? {
+        return evaluate(stmt.expr)
+    }
+
+    override fun visitBinaryExpr(expr: Expr.Binary): Any? {
         val left = evaluate(expr.left)
         val right = evaluate(expr.right)
 
@@ -24,7 +51,7 @@ class Interpreter : Expr.Visitor<Any?> {
         }
     }
 
-    override fun acceptUnary(expr: Expr.Unary): Any? {
+    override fun visitUnaryExpr(expr: Expr.Unary): Any? {
         val right = evaluate(expr.right)
 
         return when(expr.op.type) {
@@ -53,8 +80,7 @@ class Interpreter : Expr.Visitor<Any?> {
         return true
     }
 
-    override fun acceptGrouping(expr: Expr.Grouping): Any? = evaluate(expr.expr)
+    override fun visitGroupingExpr(expr: Expr.Grouping): Any? = evaluate(expr.expr)
 
-    override fun acceptLiteral(expr: Expr.Literal): Any? = expr.value
+    override fun visitLiteralExpr(expr: Expr.Literal): Any? = expr.value
 }
-
