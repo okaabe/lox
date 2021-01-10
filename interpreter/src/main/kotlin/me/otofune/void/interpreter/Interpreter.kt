@@ -14,6 +14,7 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Any?> {
     }
 
     override fun visitVarAssign(stmt: Stmt.VarAssign) {
+        callframe.assignAndCheckExistence(stmt.variable.lexeme, evaluate(stmt.newValue))
     }
 
     override fun visitVariableExpr(expr: Expr.Variable): Any? {
