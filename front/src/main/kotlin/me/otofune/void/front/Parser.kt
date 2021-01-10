@@ -16,11 +16,20 @@ class Parser(
         return stmts
     }
 
+
     private fun statement(): Stmt {
         return when(peek().type) {
             TokenType.VAR -> varDecl()
+            TokenType.PRINT -> printDecl()
+
+
             else -> Stmt.ExprStmt(expression())
         }
+    }
+
+    private fun printDecl(): Stmt {
+        advance()
+        return Stmt.PrintStmt(expression())
     }
 
     private fun varDecl(): Stmt {
@@ -97,6 +106,7 @@ class Parser(
         return primary()
     }
 
+
     private fun primary(): Expr = when {
         match(TokenType.FALSE) -> Expr.Literal(false)
         match(TokenType.TRUE) -> Expr.Literal(true)
@@ -105,7 +115,7 @@ class Parser(
         match(TokenType.LEFT_PAREN) -> Expr.Grouping(expression().also {
             consume(TokenType.RIGHT_PAREN)
         })
-        match(TokenType.IDENTIFER) -> Expr.Literal(previous().lexeme)
+        match(TokenType.IDENTIFER) -> Expr.Variable(previous())
 
         else -> {
             throw FrontException.InvalidExpression(previous().line)
