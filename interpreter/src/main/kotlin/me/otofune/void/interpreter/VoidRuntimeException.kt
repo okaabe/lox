@@ -1,6 +1,5 @@
 package me.otofune.void.interpreter
 
-import me.otofune.void.front.Token
 import me.otofune.void.front.VoidException
 
 sealed class VoidRuntimeException(message: String) : VoidException("Runtime", message) {
