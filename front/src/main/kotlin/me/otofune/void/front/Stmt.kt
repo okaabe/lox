@@ -2,6 +2,7 @@ package me.otofune.void.front
 
 sealed class Stmt {
     interface Visitor<T> {
+        fun visitStmt(stmt: Stmt): T = stmt.visit(this)
         fun visitExprStmt(stmt: ExprStmt): T
         fun visitVarDeclStmt(stmt: VarDeclStmt): T
         fun visitPrintStmt(stmt: PrintStmt): T

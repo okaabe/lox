@@ -2,6 +2,7 @@ package me.otofune.void.front
 
 sealed class Expr {
     interface Visitor<T> {
+        fun visitExpr(expr: Expr): T = expr.visit(this)
         fun visitBinaryExpr(expr: Binary) : T
         fun visitGroupingExpr(expr: Grouping): T
         fun visitUnaryExpr(expr: Unary): T

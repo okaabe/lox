@@ -7,7 +7,7 @@ import me.otofune.void.interpreter.Interpreter
 import java.nio.file.Files
 import java.nio.file.Paths
 
-object Executor {
+object CodeExecutor {
     fun findAndExecuteFile(file: String) {
         if (!file.endsWith(".void")) {
             return println("Invalid file")

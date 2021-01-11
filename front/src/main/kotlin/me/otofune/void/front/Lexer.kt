@@ -61,7 +61,6 @@ class Lexer(
             '&' -> if (match('&')) addToken(TokenType.AND) else throw FrontException.UnexpectedChar(char, line)
             '|' -> if (match('|')) addToken(TokenType.OR) else throw FrontException.UnexpectedChar(char, line)
 
-
             else -> {
                 if (isValidStartOfIdentifer(char)) return consumeIdentifer()
                 if (isDigit(char)) return consumeNumber()

@@ -22,7 +22,6 @@ class Parser(
             TokenType.VAR -> varDecl()
             TokenType.PRINT -> printDecl()
 
-
             else -> Stmt.ExprStmt(expression())
         }
     }

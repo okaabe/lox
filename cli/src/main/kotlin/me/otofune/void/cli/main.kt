@@ -5,5 +5,5 @@ fun main(args: Array<String>) {
         return println("Usage: void [script]")
     }
 
-    Executor.findAndExecuteFile(args[0])
+    CodeExecutor.findAndExecuteFile(args[0])
 }
