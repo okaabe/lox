@@ -1,9 +1,10 @@
 package me.otofune.void.interpreter.runtime
 
+import me.otofune.void.front.Expr
 import me.otofune.void.front.Stmt
 
 class Executor(
-    private val evaluator: Evaluator,
+    private val evaluator: Expr.Visitor<Any?>,
     private val environment: Environment
 ) : Stmt.Visitor<Any?> {
 
@@ -13,6 +14,9 @@ class Executor(
 
     override fun visitVarDeclStmt(stmt: Stmt.VarDeclStmt) {
         environment.declare(stmt.name.lexeme, evaluator.visitExpr(stmt.value))
+    }
+
+    override fun visitIfStmt(stmt: Stmt.IfStmt) {
     }
 
     override fun visitPrintStmt(stmt: Stmt.PrintStmt) {
