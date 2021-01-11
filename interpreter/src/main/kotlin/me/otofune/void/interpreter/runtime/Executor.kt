@@ -2,6 +2,7 @@ package me.otofune.void.interpreter.runtime
 
 import me.otofune.void.front.Expr
 import me.otofune.void.front.Stmt
+import me.otofune.void.interpreter.runtime.util.isTruthy
 
 class Executor(
     private val evaluator: Expr.Visitor<Any?>,
@@ -17,6 +18,9 @@ class Executor(
     }
 
     override fun visitIfStmt(stmt: Stmt.IfStmt) {
+        if (isTruthy(evaluator.visitExpr(stmt.condition))) {
+            visitStmt(stmt.thenDo)
+        } else stmt.elseDo?.also { visitStmt(it) }
     }
 
     override fun visitPrintStmt(stmt: Stmt.PrintStmt) {

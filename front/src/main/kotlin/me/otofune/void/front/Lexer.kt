@@ -12,6 +12,7 @@ private val RESERVED_KEYWORDS = mapOf(
     "if" to TokenType.IF,
     "print" to TokenType.PRINT,
     "super" to TokenType.SUPER,
+    "else" to TokenType.ELSE
 )
 
 class Lexer(

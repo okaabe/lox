@@ -21,6 +21,7 @@ class Parser(
         return when(peek().type) {
             TokenType.VAR -> varDecl()
             TokenType.PRINT -> printDecl()
+            TokenType.IF -> ifDecl()
 
             else -> Stmt.ExprStmt(expression())
         }
@@ -29,6 +30,20 @@ class Parser(
     private fun printDecl(): Stmt {
         advance()
         return Stmt.PrintStmt(expression())
+    }
+
+    private fun ifDecl(): Stmt {
+        advance()
+        consume(TokenType.LEFT_PAREN)
+        val condition = expression()//($expr)
+
+        consume(TokenType.RIGHT_PAREN)
+        val thenDo = statement()
+
+        return when {
+            match(TokenType.ELSE) -> Stmt.IfStmt(condition, thenDo, statement())
+            else -> Stmt.IfStmt(condition, thenDo)
+        }
     }
 
     private fun varDecl(): Stmt {

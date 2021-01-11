@@ -1,0 +1,3 @@
+if (2 > 2)
+    print "2 is greater than 2"
+else print "2 is not greater than 2"
