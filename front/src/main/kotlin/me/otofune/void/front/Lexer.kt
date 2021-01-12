@@ -35,7 +35,7 @@ class Lexer(
 
         addToken(TokenType.EOF)
 
-        return tokens;
+        return tokens
     }
 
     private fun scanSingle() {
@@ -70,7 +70,7 @@ class Lexer(
         }
     }
 
-    private fun isValidStartOfIdentifer(char: Char?): Boolean = char in 'a' .. 'z'
+    private fun isValidStartOfIdentifer(char: Char?): Boolean = char?.toLowerCase() in 'a' .. 'z'
     private fun isDigit(char: Char?): Boolean = char in '0' .. '9'
 
     private fun consumeNumber() {
@@ -118,7 +118,7 @@ class Lexer(
     }
 
     private fun match(char: Char): Boolean {
-        if (isAtEnd) return false;
+        if (isAtEnd) return false
         if (code.getOrNull(current) == char) {
             advance()
             return true
