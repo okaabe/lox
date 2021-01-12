@@ -28,8 +28,4 @@ class Executor(
     override fun visitPrintStmt(stmt: Stmt.PrintStmt) {
         println(evaluator.visitExpr(stmt.expr))
     }
-
-    override fun visitVarAssign(stmt: Stmt.VarAssign) {
-        environment.assign(stmt.variable.lexeme, stmt.newValue)
-    }
 }
