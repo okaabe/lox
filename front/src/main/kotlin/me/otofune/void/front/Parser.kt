@@ -138,6 +138,7 @@ class Parser(
         match(TokenType.TRUE) -> Expr.Literal(true)
         match(TokenType.STRING) -> Expr.Literal(previous().literal)
         match(TokenType.NUMBER) -> Expr.Literal(previous().literal)
+        match(TokenType.NIL) -> Expr.Literal(null)
         match(TokenType.LEFT_PAREN) -> Expr.Grouping(expression().also {
             consume(TokenType.RIGHT_PAREN)
         })
