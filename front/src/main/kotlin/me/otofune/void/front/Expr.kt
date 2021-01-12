@@ -22,8 +22,8 @@ sealed class Expr {
     }
 
     data class Assign(
-        val target: Token,
-        val value: Token
+        val target: Variable,
+        val value: Expr
     ): Expr() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitAssignExpr(this)
     }
