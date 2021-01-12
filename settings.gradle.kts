@@ -1,7 +1,6 @@
 
 rootProject.name = "void"
 
-include("front")
+include("grammar")
 include("interpreter")
-include("cli")
 include("cli")

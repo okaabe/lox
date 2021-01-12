@@ -1,6 +1,6 @@
 package me.otofune.void.interpreter
 
-import me.otofune.void.front.Stmt
+import me.otofune.void.grammar.Stmt
 import me.otofune.void.interpreter.runtime.Environment
 import me.otofune.void.interpreter.runtime.Evaluator
 import me.otofune.void.interpreter.runtime.Executor

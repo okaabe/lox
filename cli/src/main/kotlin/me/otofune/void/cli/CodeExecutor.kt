@@ -1,8 +1,8 @@
 package me.otofune.void.cli
 
-import me.otofune.void.front.Lexer
-import me.otofune.void.front.Parser
-import me.otofune.void.front.VoidException
+import me.otofune.void.grammar.Lexer
+import me.otofune.void.grammar.Parser
+import me.otofune.void.grammar.VoidException
 import me.otofune.void.interpreter.Interpreter
 import java.nio.file.Files
 import java.nio.file.Paths

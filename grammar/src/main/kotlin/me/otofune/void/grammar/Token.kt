@@ -1,4 +1,4 @@
-package me.otofune.void.front
+package me.otofune.void.grammar
 
 data class Token(
     val type: TokenType,

@@ -1,4 +1,4 @@
-package me.otofune.void.front
+package me.otofune.void.grammar
 
 sealed class FrontException(message: String) : VoidException("Front", message) {
     class UnexpectedChar(char: Char, line: Int) : FrontException("Unexpected char $char in line $line")
