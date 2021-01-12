@@ -1,6 +1,6 @@
 package me.otofune.void.interpreter.runtime.util
 
-import me.otofune.void.front.Token
+import me.otofune.void.grammar.Token
 import me.otofune.void.interpreter.exceptions.VoidRuntimeException
 
 fun checkNumberOperand(operator: Token, operand: Any?): Double {

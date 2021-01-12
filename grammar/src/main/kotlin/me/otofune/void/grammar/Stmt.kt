@@ -1,4 +1,4 @@
-package me.otofune.void.front
+package me.otofune.void.grammar
 
 sealed class Stmt {
     interface Visitor<T> {
@@ -35,7 +35,7 @@ sealed class Stmt {
         val thenDo: Stmt,
         val elseDo: Stmt? = null
     ) : Stmt() {
-        override fun <T> visit(visitor: Stmt.Visitor<T>): T = visitor.visitIfStmt(this)
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitIfStmt(this)
     }
 
     data class BlockStmt(

@@ -1,4 +1,4 @@
-package me.otofune.void.front
+package me.otofune.void.grammar
 
 private val RESERVED_KEYWORDS = mapOf(
     "class" to TokenType.CLASS,

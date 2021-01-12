@@ -1,4 +1,4 @@
-package me.otofune.void.front
+package me.otofune.void.grammar
 
 class Parser(
     private val tokens: List<Token>

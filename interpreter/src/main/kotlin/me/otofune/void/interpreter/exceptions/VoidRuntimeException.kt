@@ -1,6 +1,6 @@
 package me.otofune.void.interpreter.exceptions
 
-import me.otofune.void.front.VoidException
+import me.otofune.void.grammar.VoidException
 
 sealed class VoidRuntimeException(message: String) : VoidException("Runtime", message) {
     class AlreadyDeclared(reference: Any?): VoidRuntimeException("$reference is already been declared")

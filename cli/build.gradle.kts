@@ -13,7 +13,7 @@ application {
 }
 
 dependencies {
-    api(project(":front"))
+    api(project(":grammar"))
     api(project(":interpreter"))
 }
 

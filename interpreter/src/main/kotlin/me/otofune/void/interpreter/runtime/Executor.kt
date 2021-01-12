@@ -1,7 +1,7 @@
 package me.otofune.void.interpreter.runtime
 
-import me.otofune.void.front.Expr
-import me.otofune.void.front.Stmt
+import me.otofune.void.grammar.Expr
+import me.otofune.void.grammar.Stmt
 import me.otofune.void.interpreter.runtime.util.isTruthy
 
 class Executor(

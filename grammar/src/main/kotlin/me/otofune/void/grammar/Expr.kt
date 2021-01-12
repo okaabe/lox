@@ -1,4 +1,4 @@
-package me.otofune.void.front
+package me.otofune.void.grammar
 
 sealed class Expr {
     interface Visitor<T> {
