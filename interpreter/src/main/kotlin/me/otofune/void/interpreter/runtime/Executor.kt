@@ -23,6 +23,8 @@ class Executor(
         } else stmt.elseDo?.also { visitStmt(it) }
     }
 
+    override fun visitBlockStmt(stmt: Stmt.BlockStmt) = stmt.statements.map { visitStmt(it) }
+
     override fun visitPrintStmt(stmt: Stmt.PrintStmt) {
         println(evaluator.visitExpr(stmt.expr))
     }

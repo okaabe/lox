@@ -3,6 +3,8 @@ package me.otofune.void.front
 sealed class Stmt {
     interface Visitor<T> {
         fun visitStmt(stmt: Stmt): T = stmt.visit(this)
+
+        fun visitBlockStmt(stmt: BlockStmt): T
         fun visitExprStmt(stmt: ExprStmt): T
         fun visitVarDeclStmt(stmt: VarDeclStmt): T
         fun visitPrintStmt(stmt: PrintStmt): T
@@ -42,5 +44,11 @@ sealed class Stmt {
         val elseDo: Stmt? = null
     ) : Stmt() {
         override fun <T> visit(visitor: Stmt.Visitor<T>): T = visitor.visitIfStmt(this)
+    }
+
+    data class BlockStmt(
+        val statements: List<Stmt>
+    ): Stmt() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitBlockStmt(this)
     }
 }

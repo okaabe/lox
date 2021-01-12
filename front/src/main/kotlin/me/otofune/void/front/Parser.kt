@@ -22,9 +22,21 @@ class Parser(
             TokenType.VAR -> varDecl()
             TokenType.PRINT -> printDecl()
             TokenType.IF -> ifDecl()
+            TokenType.LEFT_BRACE -> Stmt.BlockStmt(block())
 
             else -> Stmt.ExprStmt(expression())
         }
+    }
+
+    private fun block(): List<Stmt> {
+        val statements = mutableListOf<Stmt>()
+
+        while(!check(TokenType.RIGHT_BRACE) && !isAtEnd) {
+            statements.add(statement())
+        }
+
+        consume(TokenType.RIGHT_BRACE)
+        return statements
     }
 
     private fun printDecl(): Stmt {
