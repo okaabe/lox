@@ -8,6 +8,7 @@ sealed class Expr {
         fun visitUnaryExpr(expr: Unary): T
         fun visitLiteralExpr(expr: Literal): T
         fun visitVariableExpr(expr: Variable): T
+        fun visitAssignExpr(expr: Assign): T
     }
 
     abstract fun <T> visit(visitor: Visitor<T>): T
@@ -18,6 +19,13 @@ sealed class Expr {
         val right: Expr
     ) : Expr() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitBinaryExpr(this)
+    }
+
+    data class Assign(
+        val target: Variable,
+        val value: Expr
+    ): Expr() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitAssignExpr(this)
     }
 
     data class Unary(

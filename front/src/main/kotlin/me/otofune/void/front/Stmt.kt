@@ -8,7 +8,6 @@ sealed class Stmt {
         fun visitExprStmt(stmt: ExprStmt): T
         fun visitVarDeclStmt(stmt: VarDeclStmt): T
         fun visitPrintStmt(stmt: PrintStmt): T
-        fun visitVarAssign(stmt: VarAssign): T
         fun visitIfStmt(stmt: IfStmt): T
     }
 
@@ -29,13 +28,6 @@ sealed class Stmt {
         val expr: Expr
     ): Stmt() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitPrintStmt(this)
-    }
-
-    data class VarAssign(
-        val variable: Token,
-        val newValue: Expr
-    ): Stmt() {
-        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitVarAssign(this)
     }
 
     data class IfStmt(

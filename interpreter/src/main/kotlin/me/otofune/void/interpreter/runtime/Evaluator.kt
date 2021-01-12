@@ -49,4 +49,8 @@ class Evaluator(
     override fun visitLiteralExpr(expr: Expr.Literal): Any? = expr.value
 
     override fun visitVariableExpr(expr: Expr.Variable): Any? = environment.get(expr.variable.lexeme)
+
+    override fun visitAssignExpr(expr: Expr.Assign): Any? = visitExpr(expr.value).also { value ->
+        environment.assign(expr.target.variable.lexeme, value)
+    }
 }

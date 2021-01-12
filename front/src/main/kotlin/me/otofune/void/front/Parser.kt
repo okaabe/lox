@@ -67,12 +67,28 @@ class Parser(
         return Stmt.VarDeclStmt(name, value)
     }
 
-    private fun expression(): Expr = equality()
+    private fun expression(): Expr = assignment()
+
+    private fun assignment(): Expr {
+        val left = equality()
+
+        if (match(TokenType.EQUAL)) {
+            val value = assignment()
+
+            if (left is Expr.Variable) {
+                return Expr.Assign(left, value)
+            }
+
+            throw FrontException.InvalidAssignmentTarget(previous().line)
+        }
+
+        return left
+    }
 
     private fun equality(): Expr {
         var left = comparison()
 
-        while(match(TokenType.EQUAL, TokenType.EQUAL_EQUAL, TokenType.BANG_EQUAL)) {
+        while(match(TokenType.EQUAL_EQUAL, TokenType.BANG_EQUAL)) {
             val op = previous()
             val right = comparison()
 
