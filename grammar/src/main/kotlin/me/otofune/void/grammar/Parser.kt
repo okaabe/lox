@@ -31,6 +31,7 @@ class Parser(
     private fun block(): List<Stmt> {
         val statements = mutableListOf<Stmt>()
 
+        advance()
         while(!check(TokenType.RIGHT_BRACE) && !isAtEnd) {
             statements.add(statement())
         }
