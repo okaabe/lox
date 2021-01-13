@@ -1,7 +1,0 @@
-var velocity = 70
-
-if (velocity > 50) {
-  print "Por favor pare! Você está andando muito rapido!"
-} else {
-  print "Velocidade aprovada, continue senhor!"
-}

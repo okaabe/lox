@@ -8,8 +8,14 @@ import me.otofune.void.interpreter.runtime.util.isEqual
 import me.otofune.void.interpreter.runtime.util.isTruthy
 
 class Evaluator(
-    private val environment: Environment
+    private var environment: Environment
 ): Expr.Visitor<Any?> {
+    fun visitExprWithScope(expr: Expr, scope: Environment): Any? {
+        environment = scope
+
+        return visitExpr(expr)
+    }
+
     override fun visitBinaryExpr(expr: Expr.Binary): Any? {
         val left = visitExpr(expr.left)
         val right = visitExpr(expr.right)

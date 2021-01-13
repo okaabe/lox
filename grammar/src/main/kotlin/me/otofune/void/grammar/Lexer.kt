@@ -42,8 +42,8 @@ class Lexer(
         when(val char = advance()) {
             '(' -> addToken(TokenType.LEFT_PAREN)
             ')' -> addToken(TokenType.RIGHT_PAREN)
-            '[' -> addToken(TokenType.LEFT_BRACE)
-            ']' -> addToken(TokenType.RIGHT_BRACE)
+            '{' -> addToken(TokenType.LEFT_BRACE)
+            '}' -> addToken(TokenType.RIGHT_BRACE)
 
             '+' -> addToken(TokenType.PLUS)
             '-' -> addToken(TokenType.MINUS)
