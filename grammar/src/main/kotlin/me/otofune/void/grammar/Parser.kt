@@ -65,7 +65,7 @@ class Parser(
         consume(TokenType.EQUAL)
         val value = expression()
 
-        return Stmt.VarDeclStmt(name, value)
+        return Stmt.VarStmt(name, value)
     }
 
     private fun expression(): Expr = assignment()

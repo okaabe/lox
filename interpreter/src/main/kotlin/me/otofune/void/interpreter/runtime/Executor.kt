@@ -1,6 +1,5 @@
 package me.otofune.void.interpreter.runtime
 
-import me.otofune.void.grammar.Expr
 import me.otofune.void.grammar.Stmt
 import me.otofune.void.interpreter.runtime.util.isTruthy
 
@@ -13,7 +12,7 @@ class Executor(
         return evaluator.visitExprWithScope(stmt.expr, environment)
     }
 
-    override fun visitVarDeclStmt(stmt: Stmt.VarDeclStmt) {
+    override fun visitVarStmt(stmt: Stmt.VarStmt) {
         environment.declare(stmt.name.lexeme, evaluator.visitExprWithScope(stmt.value, environment))
     }
 
@@ -37,5 +36,13 @@ class Executor(
 
     override fun visitPrintStmt(stmt: Stmt.PrintStmt) {
         println(evaluator.visitExprWithScope(stmt.expr, environment))
+    }
+
+    override fun visitCallStmt(stmt: Stmt.CallStmt): Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitFunctionStmt(stmt: Stmt.FunctionStmt): Any? {
+        TODO("Not yet implemented")
     }
 }
