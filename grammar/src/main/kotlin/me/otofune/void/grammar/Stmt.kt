@@ -9,6 +9,8 @@ sealed class Stmt {
         fun visitVarStmt(stmt: VarStmt): T
         fun visitIfStmt(stmt: IfStmt): T
         fun visitFunctionStmt(stmt: FunctionStmt): T
+        fun visitReturnStmt(stmt: ReturnStmt): T
+        fun visitWhileStmt(stmt: WhileStmt): T
     }
 
     abstract fun <T> visit(visitor: Visitor<T>): T
@@ -44,5 +46,18 @@ sealed class Stmt {
         val statements: List<Stmt>
     ): Stmt() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitBlockStmt(this)
+    }
+
+    data class ReturnStmt(
+        val expression: Expr?
+    ): Stmt() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitReturnStmt(this)
+    }
+
+    data class WhileStmt(
+        val condition: Expr,
+        val body: Stmt
+    ): Stmt() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitWhileStmt(this)
     }
 }
