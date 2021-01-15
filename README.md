@@ -7,4 +7,16 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/okaabe/void?color=orange&style=for-the-badge)
 
 
-<p>Void is a simple programming language inspired in the minecraft void</p>
+<p>Void is a simple programming language created using the book crafintinterpreters</p>
+
+### Syntax
+```rs
+fn add(a, b) {
+ return a + b
+}
+
+println(add(5, 10))
+```
+
+### Documentation
+TODO
