@@ -2,7 +2,7 @@ package me.otofune.void.grammar
 
 private val RESERVED_KEYWORDS = mapOf(
     "class" to TokenType.CLASS,
-    "fun" to TokenType.FUN,
+    "fn" to TokenType.FN,
     "true" to TokenType.TRUE,
     "false" to TokenType.FALSE,
     "var" to TokenType.VAR,
@@ -62,6 +62,8 @@ class Lexer(
 
             '&' -> if (match('&')) addToken(TokenType.AND) else throw FrontException.UnexpectedChar(char, line)
             '|' -> if (match('|')) addToken(TokenType.OR) else throw FrontException.UnexpectedChar(char, line)
+
+            ',' -> addToken(TokenType.COMMA)
 
             else -> {
                 if (isValidStartOfIdentifer(char)) return consumeIdentifer()
