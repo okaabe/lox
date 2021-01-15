@@ -6,8 +6,14 @@ class Builtin(
     private val environment: Environment
 ) {
     fun setup() {
-        environment.declareFunction("println", 1) {
-            println(it[0])
+        with(environment) {
+            declareFunction("println", 1) {
+                println(it[0])
+            }
+
+            declareFunction("clock") {
+                System.currentTimeMillis().toDouble()
+            }
         }
     }
 }
