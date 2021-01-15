@@ -1,6 +1,5 @@
 package me.otofune.void.interpreter.exceptions
 
-import me.otofune.void.grammar.FrontException
 import me.otofune.void.grammar.VoidException
 
 sealed class VoidRuntimeException(message: String) : VoidException("Runtime", message) {
