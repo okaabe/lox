@@ -19,7 +19,12 @@ sealed class VoidCallable {
                 scopeEnvironment.declare(token.lexeme, arguments.getOrNull(index))
             }
 
-            evaluator.executeBlock(statement.body, scopeEnvironment)
+
+            try {
+                evaluator.executeBlock(statement.body, scopeEnvironment)
+            } catch(returnException: ReturnException) {
+                return returnException.value
+            }
 
             return null
         }
