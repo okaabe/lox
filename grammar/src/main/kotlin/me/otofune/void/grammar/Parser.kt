@@ -20,7 +20,6 @@ class Parser(
     private fun statement(): Stmt {
         return when(peek().type) {
             TokenType.VAR -> parseVarDeclaration()
-            TokenType.PRINT -> parsePrintDeclaration()
             TokenType.IF -> parseIfDeclaration()
             TokenType.FN -> parseFunctionDeclaration()
             TokenType.LEFT_BRACE -> Stmt.BlockStmt(parseStatementsBlock())
@@ -49,7 +48,7 @@ class Parser(
         if (!check(TokenType.RIGHT_PAREN)) {
             do {
                 if (parameters.size > MAX_PARAM) {
-                    throw FrontException.ParamsLimitExceeded(previous().line)
+                    throw GrammarException.ParamsLimitExceeded(previous().line)
                 }
 
                 parameters.add(consume(TokenType.IDENTIFER))
@@ -72,11 +71,6 @@ class Parser(
 
         consume(TokenType.RIGHT_BRACE)
         return statements
-    }
-
-    private fun parsePrintDeclaration(): Stmt {
-        advance()
-        return Stmt.PrintStmt(parseExpression())
     }
 
     private fun parseIfDeclaration(): Stmt {
@@ -114,7 +108,7 @@ class Parser(
                 return Expr.Assign(left, value)
             }
 
-            throw FrontException.InvalidAssignmentTarget(previous().line)
+            throw GrammarException.InvalidAssignmentTarget(previous().line)
         }
 
         return left
@@ -206,7 +200,7 @@ class Parser(
         match(TokenType.IDENTIFER) -> Expr.Variable(previous())
 
         else -> {
-            throw FrontException.InvalidExpression(previous().line)
+            throw GrammarException.InvalidExpression(previous().line)
         }
     }
 
@@ -226,7 +220,7 @@ class Parser(
     private fun consume(type: TokenType): Token {
         if (check(type)) return advance()
 
-        throw FrontException.ExpectedTokenButGot(type, peek().type, peek().line)
+        throw GrammarException.ExpectedTokenButGot(type, peek().type, peek().line)
     }
 
     private fun match(vararg types: TokenType): Boolean {
