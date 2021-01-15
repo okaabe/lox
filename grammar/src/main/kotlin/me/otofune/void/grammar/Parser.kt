@@ -21,11 +21,35 @@ class Parser(
         return when(peek().type) {
             TokenType.VAR -> parseVarDeclaration()
             TokenType.IF -> parseIfDeclaration()
+            TokenType.WHILE -> parseWhileDeclaration()
             TokenType.FN -> parseFunctionDeclaration()
+            TokenType.RETURN -> parseReturnStatement()
             TokenType.LEFT_BRACE -> Stmt.BlockStmt(parseStatementsBlock())
 
             else -> Stmt.ExprStmt(parseExpression())
         }
+    }
+
+    private fun parseWhileDeclaration(): Stmt {
+        advance()
+
+        consume(TokenType.LEFT_PAREN)
+        val condition = parseExpression()
+        consume(TokenType.RIGHT_PAREN)
+
+        return Stmt.WhileStmt(condition, statement())
+    }
+
+    private fun parseReturnStatement(): Stmt {
+        advance()
+
+        val value = if (!match(TokenType.SEMICOLON)) {
+            parseExpression()
+        } else null
+
+        consume(TokenType.SEMICOLON)
+
+        return Stmt.ReturnStmt(value)
     }
 
     private fun parseFunctionDeclaration(): Stmt {
