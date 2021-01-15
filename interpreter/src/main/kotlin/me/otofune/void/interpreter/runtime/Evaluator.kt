@@ -16,6 +16,14 @@ class Evaluator(
         return visitExpr(stmt.expr)
     }
 
+    override fun visitWhileStmt(stmt: Stmt.WhileStmt) {
+        while(isTruthy(visitExpr(stmt.condition))) {
+            visitStmt(stmt.body)
+        }
+    }
+
+    override fun visitReturnStmt(stmt: Stmt.ReturnStmt): Any? = throw ReturnException(stmt.expression?.let { visitExpr(it) })
+
     override fun visitVarStmt(stmt: Stmt.VarStmt) {
         environment.declare(stmt.name.lexeme, visitExpr(stmt.value))
     }
@@ -26,7 +34,7 @@ class Evaluator(
         } else stmt.elseDo?.also { visitStmt(it) }
     }
 
-    override fun visitBlockStmt(stmt: Stmt.BlockStmt) = executeBlock(stmt.statements, Environment())
+    override fun visitBlockStmt(stmt: Stmt.BlockStmt) = executeBlock(stmt.statements, Environment(environment))
 
     fun executeBlock(statements: List<Stmt>, scopeEnvironment: Environment) {
         val globalScope = environment.also {
