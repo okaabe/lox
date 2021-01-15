@@ -40,10 +40,6 @@ class Evaluator(
         }
     }
 
-    override fun visitPrintStmt(stmt: Stmt.PrintStmt) {
-        println(visitExpr(stmt.expr))
-    }
-
     override fun visitFunctionStmt(stmt: Stmt.FunctionStmt) {
         environment.declare(stmt.name.lexeme, VoidCallable.VoidFunction(stmt, environment))
     }

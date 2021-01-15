@@ -10,7 +10,6 @@ private val RESERVED_KEYWORDS = mapOf(
     "while" to TokenType.WHILE,
     "for" to TokenType.FOR,
     "if" to TokenType.IF,
-    "print" to TokenType.PRINT,
     "super" to TokenType.SUPER,
     "else" to TokenType.ELSE,
     "nil" to TokenType.NIL
