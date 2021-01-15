@@ -63,6 +63,7 @@ class Lexer(
             '|' -> if (match('|')) addToken(TokenType.OR) else throw GrammarException.UnexpectedChar(char, line)
 
             ',' -> addToken(TokenType.COMMA)
+            ';' -> addToken(TokenType.SEMICOLON)
 
             else -> {
                 if (isValidStartOfIdentifer(char)) return consumeIdentifer()
