@@ -9,6 +9,7 @@ sealed class Expr {
         fun visitLiteralExpr(expr: Literal): T
         fun visitVariableExpr(expr: Variable): T
         fun visitAssignExpr(expr: Assign): T
+        fun visitCallExpr(expr: Call): T
     }
 
     abstract fun <T> visit(visitor: Visitor<T>): T
@@ -26,6 +27,13 @@ sealed class Expr {
         val value: Expr
     ): Expr() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitAssignExpr(this)
+    }
+
+    data class Call(
+        val calle: Expr,
+        val arguments: List<Expr>,
+    ): Expr() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitCallExpr(this)
     }
 
     data class Unary(

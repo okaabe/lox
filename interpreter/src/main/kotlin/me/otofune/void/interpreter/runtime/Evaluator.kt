@@ -1,19 +1,55 @@
 package me.otofune.void.interpreter.runtime
 
 import me.otofune.void.grammar.Expr
+import me.otofune.void.grammar.Stmt
 import me.otofune.void.grammar.TokenType
+import me.otofune.void.interpreter.exceptions.VoidRuntimeException
 
 import me.otofune.void.interpreter.runtime.util.checkNumberOperand
 import me.otofune.void.interpreter.runtime.util.isEqual
 import me.otofune.void.interpreter.runtime.util.isTruthy
 
 class Evaluator(
-    private var environment: Environment
-): Expr.Visitor<Any?> {
-    fun visitExprWithScope(expr: Expr, scope: Environment): Any? {
-        environment = scope
+    private var environment: Environment = Environment()
+): Expr.Visitor<Any?>, Stmt.Visitor<Any?> {
+    override fun visitExprStmt(stmt: Stmt.ExprStmt): Any? {
+        return visitExpr(stmt.expr)
+    }
 
-        return visitExpr(expr)
+    override fun visitWhileStmt(stmt: Stmt.WhileStmt) {
+        while(isTruthy(visitExpr(stmt.condition))) {
+            visitStmt(stmt.body)
+        }
+    }
+
+    override fun visitReturnStmt(stmt: Stmt.ReturnStmt): Any? = throw ReturnException(stmt.expression?.let { visitExpr(it) })
+
+    override fun visitVarStmt(stmt: Stmt.VarStmt) {
+        environment.declare(stmt.name.lexeme, visitExpr(stmt.value))
+    }
+
+    override fun visitIfStmt(stmt: Stmt.IfStmt) {
+        if (isTruthy(visitExpr(stmt.condition))) {
+            visitStmt(stmt.thenDo)
+        } else stmt.elseDo?.also { visitStmt(it) }
+    }
+
+    override fun visitBlockStmt(stmt: Stmt.BlockStmt) = executeBlock(stmt.statements, Environment(environment))
+
+    fun executeBlock(statements: List<Stmt>, scopeEnvironment: Environment) {
+        val globalScope = environment.also {
+            environment = scopeEnvironment
+        }
+
+        try {
+            for(statement in statements) visitStmt(statement)
+        } finally {
+            environment = globalScope
+        }
+    }
+
+    override fun visitFunctionStmt(stmt: Stmt.FunctionStmt) {
+        environment.declare(stmt.name.lexeme, VoidCallable.VoidFunction(stmt, environment))
     }
 
     override fun visitBinaryExpr(expr: Expr.Binary): Any? {
@@ -59,4 +95,25 @@ class Evaluator(
     override fun visitAssignExpr(expr: Expr.Assign): Any? = visitExpr(expr.value).also { value ->
         environment.assign(expr.target.variable.lexeme, value)
     }
+
+    override fun visitCallExpr(expr: Expr.Call): Any? {
+        val calle = visitExpr(expr.calle)
+        val arguments = mutableListOf<Any?>()
+
+        for (argument in expr.arguments) {
+            arguments.add(visitExpr(argument))
+        }
+
+        if (calle !is VoidCallable) {
+            throw VoidRuntimeException.InvalidCalle(expr.calle)
+        }
+
+        if (arguments.size != calle.arity()) {
+            throw VoidRuntimeException.InvalidArgumentsAmount(calle.arity(), arguments.size)
+        }
+
+        return calle.call(this, arguments)
+    }
+
+
 }

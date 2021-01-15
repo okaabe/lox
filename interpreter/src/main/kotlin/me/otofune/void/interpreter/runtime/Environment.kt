@@ -1,23 +1,22 @@
 package me.otofune.void.interpreter.runtime
 
-import me.otofune.void.interpreter.exceptions.VoidRuntimeException
 import me.otofune.void.interpreter.exceptions.VoidRuntimeException.*
 
 class Environment(
     private val tail: Environment? = null
 ) {
-    private val variables: MutableMap<String, Any?> = mutableMapOf()
+    private val declarations: MutableMap<String, Any?> = mutableMapOf()
 
     fun declare(name: String, value: Any?) {
-        if (variables.contains(name)) {
+        if (declarations.contains(name)) {
             throw AlreadyDeclared(name)
         }
 
-        variables[name] = value
+        declarations[name] = value
     }
 
     fun get(name: String): Any? {
-        if (variables.contains(name)) return variables[name]
+        if (declarations.contains(name)) return declarations[name]
         if (tail != null) return tail.get(name)
 
         throw ReferenceError(name)
@@ -25,7 +24,7 @@ class Environment(
 
     fun assign(name: String, value: Any?) {
         when {
-            variables.contains(name) -> variables[name] = value
+            declarations.contains(name) -> declarations[name] = value
             tail != null -> tail.assign(name, value)
 
             else -> {
@@ -33,4 +32,6 @@ class Environment(
             }
         }
     }
+
+    override fun toString(): String = "$declarations"
 }

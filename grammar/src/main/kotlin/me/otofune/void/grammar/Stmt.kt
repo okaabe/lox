@@ -7,23 +7,16 @@ sealed class Stmt {
         fun visitBlockStmt(stmt: BlockStmt): T
         fun visitExprStmt(stmt: ExprStmt): T
         fun visitVarStmt(stmt: VarStmt): T
-        fun visitPrintStmt(stmt: PrintStmt): T
         fun visitIfStmt(stmt: IfStmt): T
         fun visitFunctionStmt(stmt: FunctionStmt): T
-        fun visitCallStmt(stmt: CallStmt): T
+        fun visitReturnStmt(stmt: ReturnStmt): T
+        fun visitWhileStmt(stmt: WhileStmt): T
     }
 
     abstract fun <T> visit(visitor: Visitor<T>): T
 
     data class ExprStmt(val expr: Expr) : Stmt() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitExprStmt(this)
-    }
-
-    data class CallStmt(
-        val target: Token,
-        val parameters: List<Token>
-    ): Stmt() {
-        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitCallStmt(this)
     }
 
     data class FunctionStmt(
@@ -41,12 +34,6 @@ sealed class Stmt {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitVarStmt(this)
     }
 
-    data class PrintStmt(
-        val expr: Expr
-    ): Stmt() {
-        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitPrintStmt(this)
-    }
-
     data class IfStmt(
         val condition: Expr,
         val thenDo: Stmt,
@@ -59,5 +46,18 @@ sealed class Stmt {
         val statements: List<Stmt>
     ): Stmt() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitBlockStmt(this)
+    }
+
+    data class ReturnStmt(
+        val expression: Expr?
+    ): Stmt() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitReturnStmt(this)
+    }
+
+    data class WhileStmt(
+        val condition: Expr,
+        val body: Stmt
+    ): Stmt() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitWhileStmt(this)
     }
 }
