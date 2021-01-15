@@ -10,20 +10,12 @@ sealed class Stmt {
         fun visitPrintStmt(stmt: PrintStmt): T
         fun visitIfStmt(stmt: IfStmt): T
         fun visitFunctionStmt(stmt: FunctionStmt): T
-        fun visitCallStmt(stmt: CallStmt): T
     }
 
     abstract fun <T> visit(visitor: Visitor<T>): T
 
     data class ExprStmt(val expr: Expr) : Stmt() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitExprStmt(this)
-    }
-
-    data class CallStmt(
-        val target: Token,
-        val parameters: List<Token>
-    ): Stmt() {
-        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitCallStmt(this)
     }
 
     data class FunctionStmt(
