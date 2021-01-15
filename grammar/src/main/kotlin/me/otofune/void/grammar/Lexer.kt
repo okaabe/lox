@@ -60,8 +60,8 @@ class Lexer(
 
             '"' -> consumeString()
 
-            '&' -> if (match('&')) addToken(TokenType.AND) else throw FrontException.UnexpectedChar(char, line)
-            '|' -> if (match('|')) addToken(TokenType.OR) else throw FrontException.UnexpectedChar(char, line)
+            '&' -> if (match('&')) addToken(TokenType.AND) else throw GrammarException.UnexpectedChar(char, line)
+            '|' -> if (match('|')) addToken(TokenType.OR) else throw GrammarException.UnexpectedChar(char, line)
 
             ',' -> addToken(TokenType.COMMA)
 
@@ -89,7 +89,7 @@ class Lexer(
         }
 
         if (isAtEnd) {
-            throw FrontException.NotFinishedString(line)
+            throw GrammarException.NotFinishedString(line)
         }
 
         advance()
