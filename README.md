@@ -1,13 +1,13 @@
- <img width="300px" height="300px" src="https://i.ytimg.com/vi/r3Yun-y9_AQ/maxresdefault.jpg" align="right"/>
+ <img src="https://craftinginterpreters.com/image/logotype-small.png"/>
  
-# Void
+# Lox
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/okaabe/void?color=orange&style=for-the-badge)
 ![GitHub issues](https://img.shields.io/github/issues/okaabe/void?color=orange&style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/okaabe/void?color=orange&style=for-the-badge)
 
 
-<p>Void is a simple programming language created using the book crafintinterpreters</p>
+<p>My implementation of the programming language created in craftinginterpreters book using kotlin instead of java</p>
 
 ### Syntax
 ```rs
