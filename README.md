@@ -1,4 +1,4 @@
- <img src="https://craftinginterpreters.com/image/logotype-small.png"/>
+<p align="center"><img src="https://craftinginterpreters.com/image/logotype-small.png"/></p>
  
 # Lox
 
@@ -9,14 +9,8 @@
 
 <p>My implementation of the programming language created in craftinginterpreters book using kotlin instead of java</p>
 
-### Syntax
-```rs
-fn add(a, b) {
- return a + b
-}
+### Links
 
-println(add(5, 10))
-```
-
-### Documentation
-TODO
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/munificent/craftinginterpreters"><img src="https://avatars0.githubusercontent.com/u/46275?s=400&v=44" width="100px;" alt=""/><br /><sub><b>Craftinginterpreter author</b></sub></a>
