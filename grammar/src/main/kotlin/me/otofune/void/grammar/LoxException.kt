@@ -2,7 +2,7 @@ package me.otofune.void.grammar
 
 import java.lang.RuntimeException
 
-abstract class VoidException(
+abstract class LoxException(
     private val type: String,
     message: String
 ) : RuntimeException(message) {
