@@ -1,6 +1,6 @@
 package me.otofune.void.interpreter.runtime
 
-import me.otofune.void.interpreter.exceptions.VoidRuntimeException.*
+import me.otofune.void.interpreter.exceptions.LoxRuntimeException.*
 
 class Environment(
     private val tail: Environment? = null
@@ -31,6 +31,24 @@ class Environment(
                 throw ReferenceError(name)
             }
         }
+    }
+
+    private fun ancestor(depth: Int): Environment {
+        var environment = this
+
+        for(i in 0 until depth) {
+            environment = environment.tail!!
+        }
+
+        return environment
+    }
+
+    fun getAt(name: String, depth: Int): Any? {
+        return ancestor(depth).get(name)
+    }
+
+    fun assignAt(name: String, depth: Int, value: Any?) {
+        ancestor(depth).assign(name, value)
     }
 
     override fun toString(): String = "$declarations"
