@@ -29,7 +29,7 @@ sealed class VoidCallable {
             return null
         }
 
-        override fun toString(): String = "Function ${statement.name.lexeme}"
+        override fun toString(): String = "[Function ${statement.name.lexeme}]"
     }
 
     data class VoidNativeFunction(
@@ -43,6 +43,6 @@ sealed class VoidCallable {
             return callback(arguments)
         }
 
-        override fun toString(): String = "Native function $name"
+        override fun toString(): String = "[Native Function $name]"
     }
 }

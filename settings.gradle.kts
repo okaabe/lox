@@ -1,5 +1,5 @@
 
-rootProject.name = "void"
+rootProject.name = "lox"
 
 include("grammar")
 include("interpreter")

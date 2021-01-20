@@ -72,7 +72,7 @@ class Parser(
         if (!check(TokenType.RIGHT_PAREN)) {
             do {
                 if (parameters.size > MAX_PARAM) {
-                    throw GrammarException.ParamsLimitExceeded(previous().line)
+                    throw LoxGrammarException.ParamsLimitExceeded(previous().line)
                 }
 
                 parameters.add(consume(TokenType.IDENTIFER))
@@ -132,7 +132,7 @@ class Parser(
                 return Expr.Assign(left, value)
             }
 
-            throw GrammarException.InvalidAssignmentTarget(previous().line)
+            throw LoxGrammarException.InvalidAssignmentTarget(previous().line)
         }
 
         return left
@@ -224,7 +224,7 @@ class Parser(
         match(TokenType.IDENTIFER) -> Expr.Variable(previous())
 
         else -> {
-            throw GrammarException.InvalidExpression(previous().line)
+            throw LoxGrammarException.InvalidExpression(previous().line)
         }
     }
 
@@ -244,7 +244,7 @@ class Parser(
     private fun consume(type: TokenType): Token {
         if (check(type)) return advance()
 
-        throw GrammarException.ExpectedTokenButGot(type, peek().type, peek().line)
+        throw LoxGrammarException.ExpectedTokenButGot(type, peek().type, peek().line)
     }
 
     private fun match(vararg types: TokenType): Boolean {
