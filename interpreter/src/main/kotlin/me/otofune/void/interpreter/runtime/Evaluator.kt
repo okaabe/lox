@@ -2,15 +2,17 @@ package me.otofune.void.interpreter.runtime
 
 import me.otofune.void.grammar.Expr
 import me.otofune.void.grammar.Stmt
+import me.otofune.void.grammar.Token
 import me.otofune.void.grammar.TokenType
-import me.otofune.void.interpreter.exceptions.VoidRuntimeException
+import me.otofune.void.interpreter.exceptions.LoxRuntimeException
 
 import me.otofune.void.interpreter.runtime.util.checkNumberOperand
 import me.otofune.void.interpreter.runtime.util.isEqual
 import me.otofune.void.interpreter.runtime.util.isTruthy
 
 class Evaluator(
-    private var environment: Environment = Environment()
+    private var environment: Environment = Environment(),
+    private val locals: MutableMap<Expr, Int>
 ): Expr.Visitor<Any?>, Stmt.Visitor<Any?> {
     override fun visitExprStmt(stmt: Stmt.ExprStmt): Any? {
         return visitExpr(stmt.expr)
@@ -90,7 +92,7 @@ class Evaluator(
 
     override fun visitLiteralExpr(expr: Expr.Literal): Any? = expr.value
 
-    override fun visitVariableExpr(expr: Expr.Variable): Any? = environment.get(expr.variable.lexeme)
+    override fun visitVariableExpr(expr: Expr.Variable): Any? = lookupVariable(expr, expr.variable)
 
     override fun visitAssignExpr(expr: Expr.Assign): Any? = visitExpr(expr.value).also { value ->
         environment.assign(expr.target.variable.lexeme, value)
@@ -105,15 +107,23 @@ class Evaluator(
         }
 
         if (calle !is VoidCallable) {
-            throw VoidRuntimeException.InvalidCalle(expr.calle)
+            throw LoxRuntimeException.InvalidCalle(expr.calle)
         }
 
         if (arguments.size != calle.arity()) {
-            throw VoidRuntimeException.InvalidArgumentsAmount(calle.arity(), arguments.size)
+            throw LoxRuntimeException.InvalidArgumentsAmount(calle.arity(), arguments.size)
         }
 
         return calle.call(this, arguments)
     }
 
+    private fun lookupVariable(expr: Expr, name: Token): Any? {
+        val distance = locals[expr]
 
+        return if (distance != null) {
+            environment.getAt(name.lexeme, distance)
+        } else {
+            environment.get(name.lexeme)
+        }
+    }
 }
