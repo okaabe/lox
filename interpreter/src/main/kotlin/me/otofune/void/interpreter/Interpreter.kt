@@ -1,6 +1,8 @@
 package me.otofune.void.interpreter
 
+import me.otofune.void.grammar.Expr
 import me.otofune.void.grammar.Stmt
+import me.otofune.void.interpreter.resolver.Resolver
 import me.otofune.void.interpreter.runtime.Builtin
 import me.otofune.void.interpreter.runtime.Environment
 import me.otofune.void.interpreter.runtime.Evaluator
@@ -9,15 +11,19 @@ class Interpreter {
     private val environment = Environment().also {
         Builtin(it).setup()
     }
-    private val evaluator = Evaluator(environment)
+    private val locals: MutableMap<Expr, Int> = mutableMapOf()
 
-    fun interpret(statements: List<Stmt>) {
-        statements.map { statement ->
-            execute(statement)
-        }
+    fun resolve(expr: Expr, depth: Int) {
+        locals[expr] = depth
     }
 
-    private fun execute(statement: Stmt) {
-        evaluator.visitStmt(statement)
+    fun interpret(statements: List<Stmt>) {
+        Resolver(this).resolve(statements)
+
+        val evaluator = Evaluator(environment, locals)
+
+        statements.map { statement ->
+            evaluator.visitStmt(statement)
+        }
     }
 }
