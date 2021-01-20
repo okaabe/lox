@@ -54,16 +54,15 @@ class Lexer(
             '<' -> if (match('=')) addToken(TokenType.LESS_EQUAL) else addToken(TokenType.LESS)
             '!' -> if (match('=')) addToken(TokenType.BANG_EQUAL) else addToken(TokenType.BANG)
 
-            ' ', '\r' -> return
+            ' ', '\r', ';' -> return
             '\n' -> line++
 
             '"' -> consumeString()
 
-            '&' -> if (match('&')) addToken(TokenType.AND) else throw GrammarException.UnexpectedChar(char, line)
-            '|' -> if (match('|')) addToken(TokenType.OR) else throw GrammarException.UnexpectedChar(char, line)
+            '&' -> if (match('&')) addToken(TokenType.AND) else throw LoxGrammarException.UnexpectedChar(char, line)
+            '|' -> if (match('|')) addToken(TokenType.OR) else throw LoxGrammarException.UnexpectedChar(char, line)
 
             ',' -> addToken(TokenType.COMMA)
-            ';' -> addToken(TokenType.SEMICOLON)
 
             else -> {
                 if (isValidStartOfIdentifer(char)) return consumeIdentifer()
@@ -89,7 +88,7 @@ class Lexer(
         }
 
         if (isAtEnd) {
-            throw GrammarException.NotFinishedString(line)
+            throw LoxGrammarException.NotFinishedString(line)
         }
 
         advance()
