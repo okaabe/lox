@@ -244,6 +244,12 @@ class Parser(
             consume(TokenType.RIGHT_PAREN)
         })
         match(TokenType.IDENTIFER) -> Expr.Variable(previous())
+        match(TokenType.SUPER) -> {
+            val keyword = previous()
+            consume(TokenType.DOT)
+
+            Expr.Super(keyword, consume(TokenType.IDENTIFER))
+        }
 
         else -> {
             throw LoxGrammarException.InvalidExpression(previous().line)
