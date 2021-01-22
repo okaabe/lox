@@ -51,7 +51,8 @@ dog.say()//[dog] 123
 ```
 
 ### To Do
-- [ ] Tree walk interpreter
+
+- [x] Tree walk interpreter
 - [ ] A bytecode virtual machine
 
 ### Links
