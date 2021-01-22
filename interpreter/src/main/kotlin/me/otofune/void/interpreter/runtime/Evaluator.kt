@@ -44,12 +44,25 @@ class Evaluator(
 
     override fun visitClassStmt(stmt: Stmt.ClassStmt) {
         val methods = mutableMapOf<String, LoxCallable.LoxFunction>()
+        val extends: LoxCallable.LoxClass? = if (stmt.extends != null) {
+            val visited = visitExpr(stmt.extends!!)
+
+            if (visited !is LoxCallable.LoxClass) {
+                throw LoxRuntimeException.InvalidExtendedClass(
+                    stmt.name.lexeme,
+                    stmt.extends!!.variable.lexeme
+                )
+            }
+
+            visited
+        } else null
+
 
         stmt.methods.map { method ->
             methods.put(method.name.lexeme, LoxCallable.LoxFunction(method, environment))
         }
 
-        environment.declare(stmt.name.lexeme, LoxCallable.LoxClass(stmt.name.lexeme, methods))
+        environment.declare(stmt.name.lexeme, LoxCallable.LoxClass(stmt.name.lexeme, extends, methods))
     }
 
     override fun visitWhileStmt(stmt: Stmt.WhileStmt) {
