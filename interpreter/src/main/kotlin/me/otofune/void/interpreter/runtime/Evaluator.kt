@@ -18,6 +18,18 @@ class Evaluator(
         return visitExpr(stmt.expr)
     }
 
+    override fun visitSuperExpr(expr: Expr.Super): Any? {
+        val distance = locals[expr]?:return null
+
+        val extendedClass = environment.getAt("super", distance) as LoxCallable.LoxClass
+        val classObject = environment.getAt("this", distance - 1) as LoxObject
+
+        val property = extendedClass.getMethod(expr.property.lexeme)
+            ?:throw LoxRuntimeException.UndefinedProperty(expr.keyword.lexeme, expr.property.lexeme)
+
+        return property.bind(classObject)
+    }
+
     override fun visitThisExpr(expr: Expr.This): Any? = lookupVariable(expr, expr.keyword)
 
     override fun visitSetExpr(expr: Expr.Set): Any? {
@@ -44,12 +56,33 @@ class Evaluator(
 
     override fun visitClassStmt(stmt: Stmt.ClassStmt) {
         val methods = mutableMapOf<String, LoxCallable.LoxFunction>()
+        val extends: LoxCallable.LoxClass? = if (stmt.extends != null) {
+            val visited = visitExpr(stmt.extends!!)
+
+            if (visited !is LoxCallable.LoxClass) {
+                throw LoxRuntimeException.InvalidExtendedClass(
+                    stmt.name.lexeme,
+                    stmt.extends!!.variable.lexeme
+                )
+            }
+
+            visited
+        } else null
+
+        extends?.also {
+            environment = Environment(environment)
+            environment.declare("super", extends)
+        }
 
         stmt.methods.map { method ->
             methods.put(method.name.lexeme, LoxCallable.LoxFunction(method, environment))
         }
 
-        environment.declare(stmt.name.lexeme, LoxCallable.LoxClass(stmt.name.lexeme, methods))
+        extends?.also {
+            environment = environment.tail!!
+        }
+
+        environment.declare(stmt.name.lexeme, LoxCallable.LoxClass(stmt.name.lexeme, extends, methods))
     }
 
     override fun visitWhileStmt(stmt: Stmt.WhileStmt) {

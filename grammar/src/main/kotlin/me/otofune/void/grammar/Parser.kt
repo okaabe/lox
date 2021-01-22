@@ -35,6 +35,10 @@ class Parser(
         advance()
 
         val name = consume(TokenType.IDENTIFER)
+        val extends = if (match(TokenType.EXTENDS)) {
+            Expr.Variable(consume(TokenType.IDENTIFER))
+        } else null
+
         consume(TokenType.LEFT_BRACE)
 
         val methods = mutableListOf<Stmt.FunctionStmt>()
@@ -45,7 +49,7 @@ class Parser(
 
         consume(TokenType.RIGHT_BRACE)
 
-        return Stmt.ClassStmt(name, methods)
+        return Stmt.ClassStmt(name, extends, methods)
     }
 
     private fun parseWhileDeclaration(): Stmt.WhileStmt {
@@ -240,6 +244,12 @@ class Parser(
             consume(TokenType.RIGHT_PAREN)
         })
         match(TokenType.IDENTIFER) -> Expr.Variable(previous())
+        match(TokenType.SUPER) -> {
+            val keyword = previous()
+            consume(TokenType.DOT)
+
+            Expr.Super(keyword, consume(TokenType.IDENTIFER))
+        }
 
         else -> {
             throw LoxGrammarException.InvalidExpression(previous().line)

@@ -57,16 +57,13 @@ sealed class LoxCallable {
     data class LoxClass(
         val name: String,
 
+        private val extends: LoxClass?,
         private val methods: MutableMap<String, LoxFunction>,
     ): LoxCallable() {
         override fun arity(): Int {
             val method = getMethod("init")
 
-            return if (method != null) {
-                method.arity()
-            } else {
-                0
-            }
+            return method?.arity() ?: 0
         }
 
         override fun call(evaluator: Evaluator, arguments: List<Any?>): Any? {
@@ -79,7 +76,11 @@ sealed class LoxCallable {
             return instance
         }
 
-        fun getMethod(name: String): LoxFunction? = methods[name]
+        fun getMethod(name: String): LoxFunction? {
+            return methods[name]?:extends?.let {
+                it.getMethod(name)
+            }
+        }
 
         override fun toString(): String = "[Class $name]"
     }

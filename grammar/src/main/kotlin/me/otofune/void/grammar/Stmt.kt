@@ -64,6 +64,7 @@ sealed class Stmt {
 
     data class ClassStmt(
         val name: Token,
+        val extends: Expr.Variable?,
         val methods: List<FunctionStmt>
     ): Stmt() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitClassStmt(this)

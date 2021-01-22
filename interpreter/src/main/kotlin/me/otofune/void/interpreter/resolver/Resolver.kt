@@ -17,6 +17,14 @@ class Resolver(
         visitStmt(it)
     }
 
+    override fun visitSuperExpr(expr: Expr.Super) {
+        if (location != Location.SUB_METHOD) {
+            throw LoxResolverException.IllegalSuperStatement(expr.keyword.line)
+        }
+
+        resolveLocal(expr, expr.keyword)
+    }
+
     override fun visitThisExpr(expr: Expr.This) {
         if (location != Location.METHOD) {
             throw LoxResolverException.IllegalThisStatement(expr.keyword.line)
@@ -38,15 +46,26 @@ class Resolver(
         declare(stmt.name)
         define(stmt.name)
 
+        stmt.extends?.also {
+            visitExpr(it)
+
+            beginScope()
+            scopes.peek()["super"] = true
+        }
+
         beginScope()
 
         scopes.peek()["this"] = true
 
         stmt.methods.map { method ->
-            resolveFunction(method, Location.METHOD)
+            resolveFunction(method, if (stmt.extends != null) Location.SUB_METHOD else Location.METHOD)
         }
 
         endScope()
+
+        stmt.extends?.also {
+            endScope()
+        }
     }
 
     override fun visitBlockStmt(stmt: Stmt.BlockStmt) {

@@ -13,6 +13,7 @@ sealed class Expr {
         fun visitGetExpr(expr: Get): T
         fun visitSetExpr(expr: Set): T
         fun visitThisExpr(expr: This): T
+        fun visitSuperExpr(expr: Super): T
     }
 
     abstract fun <T> visit(visitor: Visitor<T>): T
@@ -77,5 +78,12 @@ sealed class Expr {
         val keyword: Token
     ): Expr() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitThisExpr(this)
+    }
+
+    data class Super(
+        val keyword: Token,
+        val property: Token
+    ): Expr() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitSuperExpr(this)
     }
 }
