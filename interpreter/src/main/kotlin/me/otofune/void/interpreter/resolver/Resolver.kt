@@ -38,7 +38,9 @@ class Resolver(
         declare(stmt.name)
         define(stmt.name)
 
-        visitExpr(stmt.extends!!)
+        stmt.extends?.also {
+            visitExpr(it)
+        }
 
         beginScope()
 
