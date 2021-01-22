@@ -17,6 +17,37 @@ class Resolver(
         visitStmt(it)
     }
 
+    override fun visitThisExpr(expr: Expr.This) {
+        if (location != Location.METHOD) {
+            throw LoxResolverException.IllegalThisStatement(expr.keyword.line)
+        }
+
+        resolveLocal(expr, expr.keyword)
+    }
+
+    override fun visitGetExpr(expr: Expr.Get) {
+        visitExpr(expr.left)
+    }
+
+    override fun visitSetExpr(expr: Expr.Set) {
+        visitExpr(expr.value)
+        visitExpr(expr.left)
+    }
+
+    override fun visitClassStmt(stmt: Stmt.ClassStmt) {
+        declare(stmt.name)
+        define(stmt.name)
+
+        beginScope()
+
+        scopes.peek()["this"] = true
+
+        stmt.methods.map { method ->
+            resolveFunction(method, Location.METHOD)
+        }
+
+        endScope()
+    }
 
     override fun visitBlockStmt(stmt: Stmt.BlockStmt) {
         beginScope()

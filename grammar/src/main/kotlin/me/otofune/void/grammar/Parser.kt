@@ -24,13 +24,31 @@ class Parser(
             TokenType.WHILE -> parseWhileDeclaration()
             TokenType.FN -> parseFunctionDeclaration()
             TokenType.RETURN -> parseReturnStatement()
+            TokenType.CLASS -> parseClassDeclaration()
             TokenType.LEFT_BRACE -> Stmt.BlockStmt(parseStatementsBlock())
 
             else -> Stmt.ExprStmt(parseExpression())
         }
     }
 
-    private fun parseWhileDeclaration(): Stmt {
+    private fun parseClassDeclaration(): Stmt {
+        advance()
+
+        val name = consume(TokenType.IDENTIFER)
+        consume(TokenType.LEFT_BRACE)
+
+        val methods = mutableListOf<Stmt.FunctionStmt>()
+
+        while(!check(TokenType.RIGHT_BRACE) && !isAtEnd) {
+            methods.add(parseFunctionDeclaration())
+        }
+
+        consume(TokenType.RIGHT_BRACE)
+
+        return Stmt.ClassStmt(name, methods)
+    }
+
+    private fun parseWhileDeclaration(): Stmt.WhileStmt {
         advance()
 
         consume(TokenType.LEFT_PAREN)
@@ -40,20 +58,18 @@ class Parser(
         return Stmt.WhileStmt(condition, statement())
     }
 
-    private fun parseReturnStatement(): Stmt {
+    private fun parseReturnStatement(): Stmt.ReturnStmt {
         advance()
 
         val value = if (!match(TokenType.SEMICOLON)) {
             parseExpression()
         } else null
 
-        consume(TokenType.SEMICOLON)
-
         return Stmt.ReturnStmt(value)
     }
 
-    private fun parseFunctionDeclaration(): Stmt {
-        advance()
+    private fun parseFunctionDeclaration(): Stmt.FunctionStmt {
+        consume(TokenType.FN)
         val name = consume(TokenType.IDENTIFER)
 
         consume(TokenType.LEFT_PAREN)
@@ -128,11 +144,11 @@ class Parser(
         if (match(TokenType.EQUAL)) {
             val value = parseAssignmentExpression()
 
-            if (left is Expr.Variable) {
-                return Expr.Assign(left, value)
+            return when(left) {
+                is Expr.Variable -> Expr.Assign(left, value)
+                is Expr.Get -> Expr.Set(left.left,  left.property, value)
+                else -> throw LoxGrammarException.InvalidAssignmentTarget(previous().line)
             }
-
-            throw LoxGrammarException.InvalidAssignmentTarget(previous().line)
         }
 
         return left
@@ -206,6 +222,7 @@ class Parser(
 
         while(true) left = when {
             match(TokenType.LEFT_PAREN) -> finishCall(left)
+            match(TokenType.DOT) -> finishGet(left)
             else -> break
         }
 
@@ -213,6 +230,7 @@ class Parser(
     }
 
     private fun parsePrimaryExpression(): Expr = when {
+        match(TokenType.THIS) -> Expr.This(previous())
         match(TokenType.FALSE) -> Expr.Literal(false)
         match(TokenType.TRUE) -> Expr.Literal(true)
         match(TokenType.STRING) -> Expr.Literal(previous().literal)
@@ -226,6 +244,11 @@ class Parser(
         else -> {
             throw LoxGrammarException.InvalidExpression(previous().line)
         }
+    }
+
+    private fun finishGet(left: Expr): Expr {
+        val property = consume(TokenType.IDENTIFER)
+        return Expr.Get(left, property)
     }
 
     private fun finishCall(left: Expr): Expr {

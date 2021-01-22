@@ -8,4 +8,6 @@ sealed class LoxRuntimeException(message: String) : LoxException("Runtime", mess
     class InvalidOperand(operator: String, operand: Any?): LoxRuntimeException("$operator $operand - The operand must be a number")
     class InvalidCalle(calle: Any?) : LoxRuntimeException("$calle, you can only call functions and classes")
     class InvalidArgumentsAmount(expected: Int, got: Int): LoxRuntimeException("Expected $expected arguments, but got $got")
+    class InvalidObjectGetProperty(property: Any?, line: Int): LoxRuntimeException(".$property Invalid object get property")
+    class UndefinedProperty(obj: String, property: String): LoxRuntimeException("Undefined object property, $obj doesn't have $property property")
 }

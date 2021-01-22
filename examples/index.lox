@@ -1,0 +1,14 @@
+class Animal {
+    fn init(name, age) {
+        this.name = name
+        this.age = age
+    }
+
+    fn say() {
+        println(this.name)
+    }
+}
+
+var animal = Animal("okaabe", 10)
+
+println(animal.name)

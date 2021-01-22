@@ -4,4 +4,5 @@ enum class Location {
     FUNCTION,
     NONE,
     METHOD,
+    CLASS
 }

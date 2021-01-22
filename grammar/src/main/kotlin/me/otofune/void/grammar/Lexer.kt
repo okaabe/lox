@@ -12,7 +12,8 @@ private val RESERVED_KEYWORDS = mapOf(
     "if" to TokenType.IF,
     "super" to TokenType.SUPER,
     "else" to TokenType.ELSE,
-    "nil" to TokenType.NIL
+    "nil" to TokenType.NIL,
+    "this" to TokenType.THIS
 )
 
 class Lexer(
@@ -63,6 +64,7 @@ class Lexer(
             '|' -> if (match('|')) addToken(TokenType.OR) else throw LoxGrammarException.UnexpectedChar(char, line)
 
             ',' -> addToken(TokenType.COMMA)
+            '.' -> addToken(TokenType.DOT)
 
             else -> {
                 if (isValidStartOfIdentifer(char)) return consumeIdentifer()

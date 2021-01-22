@@ -18,6 +18,40 @@ class Evaluator(
         return visitExpr(stmt.expr)
     }
 
+    override fun visitThisExpr(expr: Expr.This): Any? = lookupVariable(expr, expr.keyword)
+
+    override fun visitSetExpr(expr: Expr.Set): Any? {
+        val obj = visitExpr(expr.left)
+
+        if (obj !is LoxObject) {
+            throw LoxRuntimeException.InvalidObjectGetProperty(expr.property, expr.property.line)
+        }
+
+        return visitExpr(expr.value).also { value ->
+            obj.set(expr.property.lexeme, value)
+        }
+    }
+
+    override fun visitGetExpr(expr: Expr.Get): Any? {
+        val obj = visitExpr(expr.left)
+
+        if (obj !is LoxObject) {
+            throw LoxRuntimeException.InvalidObjectGetProperty(expr.property.lexeme, expr.property.line)
+        }
+
+        return obj.get(expr.property.lexeme)
+    }
+
+    override fun visitClassStmt(stmt: Stmt.ClassStmt) {
+        val methods = mutableMapOf<String, LoxCallable.LoxFunction>()
+
+        stmt.methods.map { method ->
+            methods.put(method.name.lexeme, LoxCallable.LoxFunction(method, environment))
+        }
+
+        environment.declare(stmt.name.lexeme, LoxCallable.LoxClass(stmt.name.lexeme, methods))
+    }
+
     override fun visitWhileStmt(stmt: Stmt.WhileStmt) {
         while(isTruthy(visitExpr(stmt.condition))) {
             visitStmt(stmt.body)
@@ -51,7 +85,7 @@ class Evaluator(
     }
 
     override fun visitFunctionStmt(stmt: Stmt.FunctionStmt) {
-        environment.declare(stmt.name.lexeme, VoidCallable.VoidFunction(stmt, environment))
+        environment.declare(stmt.name.lexeme, LoxCallable.LoxFunction(stmt, environment))
     }
 
     override fun visitBinaryExpr(expr: Expr.Binary): Any? {
@@ -106,7 +140,7 @@ class Evaluator(
             arguments.add(visitExpr(argument))
         }
 
-        if (calle !is VoidCallable) {
+        if (calle !is LoxCallable) {
             throw LoxRuntimeException.InvalidCalle(expr.calle)
         }
 

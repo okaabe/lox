@@ -11,6 +11,7 @@ sealed class Stmt {
         fun visitFunctionStmt(stmt: FunctionStmt): T
         fun visitReturnStmt(stmt: ReturnStmt): T
         fun visitWhileStmt(stmt: WhileStmt): T
+        fun visitClassStmt(stmt: ClassStmt): T
     }
 
     abstract fun <T> visit(visitor: Visitor<T>): T
@@ -59,5 +60,12 @@ sealed class Stmt {
         val body: Stmt
     ): Stmt() {
         override fun <T> visit(visitor: Visitor<T>): T = visitor.visitWhileStmt(this)
+    }
+
+    data class ClassStmt(
+        val name: Token,
+        val methods: List<FunctionStmt>
+    ): Stmt() {
+        override fun <T> visit(visitor: Visitor<T>): T = visitor.visitClassStmt(this)
     }
 }
