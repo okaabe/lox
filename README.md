@@ -9,6 +9,51 @@
 
 <p>My implementation of the programming language created in craftinginterpreters book using kotlin instead of java</p>
 
+# Syntax
+
+### Conditions(if && else)
+```js
+var name = "okaabe"
+if (name == "okaabe") {
+ println(0)
+} else println(1)
+```
+### Functions
+```js
+fn add(a, b) {
+ return a + b
+}
+
+println(add(5, 10))//15
+```
+### Classes
+```js
+class Animal {
+  fn init(type, name) {
+    this.type = type
+    this.name = name
+  }
+  
+  fn say() {
+   println("[" + this.type + "] " + this.name)
+  }
+}
+
+class Dog {
+ fn init(name) {
+  super("dog", name)
+ }
+}
+
+var dog = Dog("123")
+
+dog.say()//[dog] 123
+```
+
+### To Do
+- [ ] Tree walk interpreter
+- [ ] A bytecode virtual machine
+
 ### Links
 
 <table>
