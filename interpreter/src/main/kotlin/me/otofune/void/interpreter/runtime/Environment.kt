@@ -3,7 +3,7 @@ package me.otofune.void.interpreter.runtime
 import me.otofune.void.interpreter.exceptions.LoxRuntimeException.*
 
 class Environment(
-    private val tail: Environment? = null
+    val tail: Environment? = null
 ) {
     private val declarations: MutableMap<String, Any?> = mutableMapOf()
 
