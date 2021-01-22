@@ -38,6 +38,8 @@ class Resolver(
         declare(stmt.name)
         define(stmt.name)
 
+        visitExpr(stmt.extends!!)
+
         beginScope()
 
         scopes.peek()["this"] = true
