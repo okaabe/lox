@@ -41,7 +41,7 @@ class Animal {
 
 class Dog {
  fn init(name) {
-  super("dog", name)
+  super.init("dog", name)
  }
 }
 
