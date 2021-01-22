@@ -39,7 +39,7 @@ class Animal {
   }
 }
 
-class Dog {
+class Dog extends Animal {
  fn init(name) {
   super.init("dog", name)
  }
